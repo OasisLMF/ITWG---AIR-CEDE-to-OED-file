@@ -52,7 +52,7 @@ class pre_process:
                 self.AIR_location_file = pd.merge(self.AIR_location_file, self.LayerConditionSID, how='inner', on=['LocationSID','PerilSetCode'])    
             else:
                 self.AIR_location_file['CondNumber'] = None
-            boolassigner = {True: 1, False: 0}
+            boolassigner = {True: '1', False: '0'}
             self.AIR_location_file['IsTenant'] = self.AIR_location_file['IsTenant'].map(boolassigner)
             self.AIR_location_file['IsPrimaryLocation'] = self.AIR_location_file['IsPrimaryLocation'].map(boolassigner)
             logger.info('Successfully read data from AIR DB for LayerconditionSID. CondNumber from tlocCondXref, tLayerCondition')
