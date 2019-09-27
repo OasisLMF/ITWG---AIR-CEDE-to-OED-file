@@ -29,16 +29,13 @@ class constants:
     Queries tags in the config files.
     """
     ACCOUNT_QUERY = 'queries_account'
-    TLC_TLON_TEXPSET = 'query_tlc_tcon_texpset'
-    TLC_TC = 'query_tlc_tc'
-    TLC_TL = 'query_tlc_tl'
     TLC_DISTINCT = 'query_tlc_distinct'
+    TLC_TL_TC_TEXP = 'query_tlc_tl_tc_texp'
     PERIL_SET_CODE = 'query_peril_setcode'
         
     LOCATION_QUERY = 'queries_location'
     TLOCTM_TLOC_TEXPSET_TLOCFEAT = 'query_tLocTm_tLoc_tExSet_tLocFeat'
-    TLOC_TCONTR = 'query_tLoc_tContr'
-    TLCLX_TLC = 'query_tlclx_tlc'
+    TLCLX_TLC = 'query_tlclx_tlc_tlt'
         
     """
     Column names in the code.
@@ -53,7 +50,11 @@ class constants:
     OCCUPANCY_COL = 'OccupancyCode'
     CONSTRUCTION_COL = 'ConstructionCode'
     FLOORAREA_COL = 'FloorAreaUnit'
-       
+    FIRSTFLOOR_COL = 'FirstFloorHeightUnit'
+    GROUNDELEV_COL = 'GroundElevationUnit'
+    BASEFLDELEV_COL = 'BaseFloodElevationUnit'
+    BUILDINGHT_COL = 'BuildingHeightUnit'
+
     """
     Output file for writting files.
     """

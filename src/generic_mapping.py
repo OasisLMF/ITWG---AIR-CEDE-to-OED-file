@@ -39,7 +39,7 @@ class genericmapping:
 
 
 
-    def peril_mapping(self,OED_file_direct_mapped,AIR_file,mapping_column,logger):
+    def peril_mapper(self,OED_file_direct_mapped,AIR_file,mapping_columns,logger):
         """
         After the direct mapping is done then are few columns which requires data to undergo values mapping.
         These columns include peril mapping, address match level mapping, construction code mapping,
@@ -50,9 +50,9 @@ class genericmapping:
         """
         try:
             self.peril_mapping = filehelper().json_reader(constants.PERIL_MAPPING_JSON,logger)
-            logger.info('Successfully read peril value mapping data for mapping column %s' %mapping_column)                  
+            logger.info('Successfully read peril value mapping data for mapping column')
         except Exception as e:
-            logger.info('Issue in reading peril value mapping data for mapping column %s' %mapping_column)
+            logger.info('Issue in reading peril value mapping data for mapping column')
             logger.error(e,exc_info=True)  
             print("Error Check Log file")   
             sys.exit(0)                                
@@ -63,31 +63,37 @@ class genericmapping:
             self.connection_string = r'Driver='+config.get('reference_dbconnection', 'Driver') +';Server='+config.get('reference_dbconnection', 'Server')+';Database='+config.get('reference_dbconnection', 'Database')+';Trusted_Connection='+config.get('reference_dbconnection', 'TrustedConnection')+';UID='+config.get('reference_dbconnection', 'ID')+';PWD='+config.get('reference_dbconnection', 'PWD')+';'            
             self.query_PERIL_SET = config.get(constants.LOCATION_QUERY,constants.PERIL_SET_CODE,logger) 
             self.peril_set_code  = dbhelper().data_reader(self.query_PERIL_SET,self.connection_string,'PerilSetCode',logger) 
-            logger.info('Successfully connected to reference database for peril mapping for mapping column %s' %mapping_column)                  
+            logger.info('Successfully connected to reference database for peril mapping for mapping column %s' %mapping_columns)
         except Exception as e:
-            logger.info('Issue in connectiing to reference database for peril mapping for mapping column %s' %mapping_column)
+            logger.info('Issue in connectiing to reference database for peril mapping for mapping column %s' %mapping_columns)
             logger.error(e,exc_info=True)   
             print("Error Check Log file")
             sys.exit(0)
-            
-        for index, row in OED_file_direct_mapped.iterrows():
-            try:   
-                OED_file_direct_mapped[mapping_column] = OED_file_direct_mapped[mapping_column].astype(str)  
-                OED_file_direct_mapped.at[index,mapping_column] =  self.peril_set_code.at[int(OED_file_direct_mapped.at[index,mapping_column]),'PerilSet'] 
-                temp_perils =  OED_file_direct_mapped.at[index, mapping_column].split(', ')
-                OED_peril_list = []
-                for peril in temp_perils:
-                    OED_peril = self.peril_mapping[peril]
-                    OED_peril_list.append(OED_peril)
-                OED_peril_list = list(set(OED_peril_list))
-                OED_peril_final = ';'.join(OED_peril_list)
-                OED_file_direct_mapped.at[index, mapping_column] = OED_peril_final
-                logger.info('Successfully assigned peril value for LocPeril data for mapping column %s' %mapping_column)                  
-            except Exception as e:
-                logger.info('Issue in assigning peril value for LocPeril data for mapping column %s' %mapping_column)
-                logger.error(e,exc_info=True)   
-                print("Error Check Log file")
-                sys.exit(0)                                
+
+        for mapping_column in mapping_columns:
+            OED_file_direct_mapped[mapping_column] = OED_file_direct_mapped[mapping_column].astype(str)
+        try:
+            for index in OED_file_direct_mapped.index:
+                for mapping_column in mapping_columns:
+                     if OED_file_direct_mapped.at[index, mapping_column] != 'nan' and OED_file_direct_mapped.at[index, mapping_column] != 'None' and OED_file_direct_mapped.at[index, mapping_column] != '-1':
+                            OED_file_direct_mapped.at[index, mapping_column] = OED_file_direct_mapped.at[index,mapping_column].split(".")[0]
+                            OED_file_direct_mapped.at[index,mapping_column] =  self.peril_set_code.at[int(OED_file_direct_mapped.at[index,mapping_column]),'PerilSet']
+                            temp_perils =  OED_file_direct_mapped.at[index, mapping_column].split(', ')
+                            OED_peril_list = []
+                            for peril in temp_perils:
+                                OED_peril = self.peril_mapping[peril]
+                                OED_peril_list.append(OED_peril)
+                            OED_peril_list = list(set(OED_peril_list))
+                            OED_peril_final = ';'.join(OED_peril_list)
+                            OED_file_direct_mapped.at[index, mapping_column] = OED_peril_final
+                     else:
+                            OED_file_direct_mapped.at[index, mapping_column] = 'AA1'
+            logger.info('Successfully assigned peril value for LocPeril data for mapping column')
+        except Exception as e:
+            logger.info('Issue in assigning peril value for LocPeril data for mapping column %s' %mapping_column)
+            logger.error(e,exc_info=True)
+            print("Error Check Log file")
+            sys.exit(0)
         OED_file_value_mapped = OED_file_direct_mapped
         return OED_file_value_mapped  
     
@@ -100,14 +106,12 @@ class genericmapping:
         try:
             self.json_value_mapper = filehelper().json_reader(json_path,logger)
             if str_to_int:
-                for index, row in OED_file_direct_mapped.iterrows():
-                    OED_file_direct_mapped.at[index, column_name] = self.json_value_mapper[OED_file_direct_mapped.at[index, column_name]] 
-                 
+                OED_file_direct_mapped[column_name] = OED_file_direct_mapped[column_name].map(self.json_value_mapper)
             else:
-                for index, row in OED_file_direct_mapped.iterrows():
-                    OED_file_direct_mapped.at[index, column_name] = self.json_value_mapper['{}'.format(OED_file_direct_mapped.at[index, column_name])] 
-            return OED_file_direct_mapped 
-            logger.info('Successfully assigned value as per json mapping for %s' %json_path)                  
+                OED_file_direct_mapped[column_name] = OED_file_direct_mapped[column_name].apply('{}'.format)
+                OED_file_direct_mapped[column_name] = OED_file_direct_mapped[column_name].map(self.json_value_mapper)
+            logger.info('Successfully assigned value as per json mapping for %s' %json_path)
+            return OED_file_direct_mapped
         except Exception as e:
             logger.info('Issue in assigning value as per json mapping for %s' %json_path)
             logger.error(e,exc_info=True)   

@@ -57,8 +57,8 @@ class filehelper:
         try:
             with open(FILE_PATH) as json_file:  
                     self.json_op = json.load(json_file)
+            logger.info('Successfully written output file %s' %FILE_PATH)
             return self.json_op
-            logger.info('Successfully written output file %s' %FILE_PATH)                  
         except Exception as e:
             logger.info('Issue in writting file %s' %FILE_PATH)
             logger.error(e,exc_info=True)
@@ -72,7 +72,7 @@ class filehelper:
     """   
     def output_write(self,OED_location_file_final,filename,logger):   
         try:
-            OED_location_file_final.to_csv(filename, index=False)   
+            OED_location_file_final.to_csv(filename, index=False,  encoding = 'utf-8')
             logger.info('Successfully written output file %s' %filename)                  
         except Exception as e:
             logger.info('Issue in writting file %s' %filename)

@@ -22,6 +22,8 @@ def logging_process():
             logger.handlers = []
         hdlr = logging.FileHandler(config.get('loggerdetails', 'filepath'))
         formatter = logging.Formatter(config.get('loggerdetails', 'format'))
+        with open(config.get('loggerdetails', 'filepath'), 'w'):
+            pass
         hdlr.setFormatter(formatter)
         logger.addHandler(hdlr) 
         logger.setLevel(logging.INFO)

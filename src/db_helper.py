@@ -18,9 +18,9 @@ class dbhelper:
         try:
             self.sql_conn_AIR = pyodbc.connect(connection_string)
             self.read_data = pd.read_sql(query, self.sql_conn_AIR, index_col = col_name) 
-            self.sql_conn_AIR.close()        
+            self.sql_conn_AIR.close()
+            logger.info('Read data for connection string %s' %connection_string)
             return self.read_data
-            logger.info('Read data for connection string %s' %connection_string)                 
         except Exception as e:
             logger.info('Issue in reading data for connection string %s'%connection_string)
             logger.error(e,exc_info=True)
