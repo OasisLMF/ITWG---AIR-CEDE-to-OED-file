@@ -7,7 +7,7 @@ Created on Wed Jul 10 13:01:09 2019
 import sys
 from file_helper import filehelper
 from db_helper import dbhelper
-import ConfigParser
+import configparser
 from constants import constants
 
 
@@ -58,10 +58,10 @@ class genericmapping:
             sys.exit(0)                                
             
         try:
-            config = ConfigParser.ConfigParser()
-            config.read(constants.CONFIG_FILE_PATH)
+            config = configparser.ConfigParser()
+            config.read([constants.CONFIG_FILE_PATH,constants.QUERY_CONFIG_FILE_PATH])
             self.connection_string = r'Driver='+config.get('reference_dbconnection', 'Driver') +';Server='+config.get('reference_dbconnection', 'Server')+';Database='+config.get('reference_dbconnection', 'Database')+';Trusted_Connection='+config.get('reference_dbconnection', 'TrustedConnection')+';UID='+config.get('reference_dbconnection', 'ID')+';PWD='+config.get('reference_dbconnection', 'PWD')+';'            
-            self.query_PERIL_SET = config.get(constants.LOCATION_QUERY,constants.PERIL_SET_CODE,logger) 
+            self.query_PERIL_SET = config.get(constants.LOCATION_QUERY,constants.PERIL_SET_CODE)
             self.peril_set_code  = dbhelper().data_reader(self.query_PERIL_SET,self.connection_string,'PerilSetCode',logger) 
             logger.info('Successfully connected to reference database for peril mapping for mapping column %s' %mapping_columns)
         except Exception as e:

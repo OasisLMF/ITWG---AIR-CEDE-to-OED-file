@@ -14,7 +14,8 @@ class constants:
     """
     File Paths
     """
-    CONFIG_FILE_PATH = r"..\augmentations\config.ini"  
+    CONFIG_FILE_PATH = r"..\augmentations\config.ini"
+    QUERY_CONFIG_FILE_PATH = r"..\augmentations\sqlqueries.ini"
     LOCATION_COLUMN_NAMES = r"..\augmentations\location_column_names.csv"
     ACCOUNT_COLUMN_NAMES = r"..\augmentations\account_column_names.csv"
     LOCATION_DIRECT_MAPPING_JSON = r"..\augmentations\location_direct_mapping.json"

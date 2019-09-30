@@ -6,7 +6,7 @@ Created on Thu Jun 27 17:58:56 2019
 """
 import logging
 import sys
-import ConfigParser
+import configparser
 
 def logging_process():
     """
@@ -15,7 +15,7 @@ def logging_process():
     Config.ini is configuration file which has all configuration related to logging.
     """
     try:
-        config = ConfigParser.RawConfigParser()
+        config = configparser.RawConfigParser()
         config.read(r"..\augmentations\config.ini")       
         logger = logging.getLogger('application')
         if logger.handlers:

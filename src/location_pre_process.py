@@ -6,7 +6,7 @@ Created on Thu Jun 27 14:55:56 2019
 """
 import sys
 import pandas as pd
-import ConfigParser
+import configparser
 from constants import constants
 from db_helper import dbhelper
 import numpy as np
@@ -24,8 +24,8 @@ class pre_process:
         These data are joined as per rquirement shared in the documentation.
         """
         try:
-            config = ConfigParser.ConfigParser()
-            config.read(constants.CONFIG_FILE_PATH)
+            config = configparser.ConfigParser()
+            config.read([constants.CONFIG_FILE_PATH,constants.QUERY_CONFIG_FILE_PATH])
             self.connection_string = r'Driver='+config.get('dbconnection', 'Driver') +';Server='+config.get('dbconnection', 'Server')+';Database='+config.get('dbconnection', 'Database')+';Trusted_Connection='+config.get('dbconnection', 'TrustedConnection')+';UID='+config.get('dbconnection', 'ID')+';PWD='+config.get('dbconnection', 'PWD')+';'
             logger.info('Successfully Connected to CEDE AIR Database')
         except Exception as e:

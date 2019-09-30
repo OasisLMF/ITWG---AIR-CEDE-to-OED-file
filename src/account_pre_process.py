@@ -4,7 +4,7 @@ Created on Wed Jul 10 11:36:26 2019
 
 @author: kumar.shivam
 """
-import ConfigParser
+import configparser
 from constants import constants
 from db_helper import dbhelper
 import sys
@@ -17,8 +17,8 @@ class AIR_base_file:
         This data is used as base dataframe and mapped through various mappings in subsequent steps.
         """
         try:
-            config = ConfigParser.ConfigParser()
-            config.read(constants.CONFIG_FILE_PATH)
+            config = configparser.ConfigParser()
+            config.read([constants.CONFIG_FILE_PATH,constants.QUERY_CONFIG_FILE_PATH])
             self.connection_string = r'Driver={SQL Server};Server='+config.get('dbconnection', 'Server')+';Database='+config.get('dbconnection', 'Database')+';Trusted_Connection='+config.get('dbconnection', 'TrustedConnection')+';UID='+config.get('dbconnection', 'ID')+';PWD='+config.get('dbconnection', 'PWD')+';'
 
             self.query_TLC_DISTINCT = config.get(constants.ACCOUNT_QUERY,constants.TLC_DISTINCT)
