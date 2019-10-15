@@ -124,7 +124,7 @@ class mapping:
             sys.exit(0)
 
         try:
-            OED_location_file_value_mapped['LocParticipation'] = AIR_location_file['Participation2']
+            OED_location_file_value_mapped['LocParticipation'] = AIR_location_file['Participation1'].apply(lambda x: round(x, 2))
             OED_location_file_value_mapped['FloodDefenseHeightUnit'] = 1
             OED_location_file_value_mapped['CondPriority'] = 1
             logger.info('Successfully assigning CondPriority, LocParticipation term value')
